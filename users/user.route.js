@@ -2,13 +2,19 @@ const express = require("express");
 const userController = require("./user.controller");
 const userRouter = express();
 
-// API for Register new user
+// API to Register new user
 userRouter.post("/register", userController.registerNewUser);
 
-// API for Login to existing user
+// API to Login to existing user
 userRouter.post("/login", userController.loginExistUser);
 
-// API for get All existing user
-userRouter.get("/", userController.allUserData);
+// API to get All existing user
+userRouter.get("/", userController.getAllUsers);
+
+// API to get user by id
+userRouter.get("/:id", userController.getUserById);
+
+// API to update user biodata
+userRouter.put("/biodata/:id", userController.updateUserBio);
 
 module.exports = userRouter;

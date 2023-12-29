@@ -40,6 +40,40 @@ class UserModel {
   getAllUsers = () => {
     return db.user.findAll();
   };
+
+  getUserById = (id) => {
+    return db.user.findOne({
+      where: {id: id},
+    });
+  };
+
+  getUserIdBio = (id) => {
+    return db.user_biodata.findOne({
+      where: {userId: id},
+    });
+  };
+
+  updateUserBiodata = (fullname, pronouns, address, id) => {
+    return db.user_biodata.update(
+      {
+        fullname,
+        pronouns,
+        address,
+      },
+      {
+        where: {userId: id},
+      }
+    );
+  };
+
+  createUserBiodata = (fullname, pronouns, address, id) => {
+    db.user_biodata.create({
+      fullname,
+      pronouns,
+      address,
+      userId: id,
+    });
+  };
 }
 
 module.exports = new UserModel();

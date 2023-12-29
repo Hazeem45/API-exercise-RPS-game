@@ -1,3 +1,4 @@
+const {INTEGER} = require("sequelize");
 const userModel = require("./user.model");
 
 class UserController {
@@ -43,9 +44,48 @@ class UserController {
     }
   };
 
-  allUserData = async (req, res) => {
+  getAllUsers = async (req, res) => {
     const allUsers = await userModel.getAllUsers();
     res.json(allUsers);
+  };
+
+  getUserById = async (req, res) => {
+    const {id} = req.params;
+    try {
+      const selectedId = await userModel.getUserById(id);
+      if (selectedId) {
+        res.json(selectedId);
+      } else {
+        res.statusCode = 404;
+        res.json({message: `id: ${id} doesn't exist!`});
+      }
+    } catch (error) {
+      return res.status(500).send(`${error}`);
+    }
+  };
+
+  updateUserBio = async (req, res) => {
+    const {id} = req.params;
+    const {fullname, pronouns, address} = req.body;
+
+    try {
+      const selectedId = await userModel.getUserById(id);
+      if (selectedId) {
+        const userIdExist = await userModel.getUserIdBio(id);
+        if (userIdExist) {
+          await userModel.updateUserBiodata(fullname, pronouns, address, id);
+          return res.json({message: "success update biodata!"});
+        } else if (!userIdExist) {
+          await userModel.createUserBiodata(fullname, pronouns, address, id);
+          return res.json({message: "success create biodata!"});
+        }
+      } else {
+        res.statusCode = 404;
+        res.json({message: `user with id: ${id} doesn't exist!`});
+      }
+    } catch (error) {
+      return res.status(500).send({message: `${error}`});
+    }
   };
 }
 

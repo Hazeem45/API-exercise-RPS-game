@@ -1,5 +1,5 @@
-const {INTEGER} = require("sequelize");
 const userModel = require("./user.model");
+const jwt = require("jsonwebtoken");
 
 class UserController {
   registerNewUser = async (req, res) => {
@@ -30,23 +30,32 @@ class UserController {
       res.json({message: "enter the data correctly!"});
     }
 
-    const userExist = await userModel.getExistingUser(email, password);
-    if (!userExist) {
-      const emailExist = await userModel.getExistingEmail(email);
-      const passwordExist = await userModel.getExistingEmail(password);
-      if (!emailExist) {
-        res.json({message: `email: ${email} is not registered!`});
-      } else if (!passwordExist) {
-        res.json({message: `password is incorrect!`});
+    try {
+      const userExist = await userModel.getExistingUser(email, password);
+      if (!userExist) {
+        const emailExist = await userModel.getExistingEmail(email);
+        const passwordExist = await userModel.getExistingEmail(password);
+        if (!emailExist) {
+          res.json({message: `email: ${email} is not registered!`});
+        } else if (!passwordExist) {
+          res.json({message: `password is incorrect!`});
+        }
+      } else {
+        console.log(userExist);
+        //generate jwt
+        const token = jwt.sign(userExist, "shhh123", {expiresIn: "1h"});
+
+        // return token
+        return res.json({accessToken: token});
       }
-    } else {
-      res.json(userExist);
+    } catch (error) {
+      return res.status(500).send({message: `${error}`});
     }
   };
 
   getAllUsers = async (req, res) => {
     const allUsers = await userModel.getAllUsers();
-    res.json(allUsers);
+    return res.json(allUsers);
   };
 
   getUserById = async (req, res) => {

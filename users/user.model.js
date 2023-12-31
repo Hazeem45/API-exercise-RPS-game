@@ -28,6 +28,10 @@ class UserModel {
       where: {
         [Op.and]: [{email}, {password: md5(password)}],
       },
+      attributes: {
+        exclude: ["password", "email"],
+      },
+      raw: true,
     });
   };
 

@@ -4,13 +4,6 @@ const jwt = require("jsonwebtoken");
 class UserController {
   registerNewUser = async (req, res) => {
     const {username, email, password} = req.body;
-    if (username === undefined || username === "") {
-      return res.json({message: "enter username!"});
-    } else if (email === undefined || email === "") {
-      return res.json({message: "enter email address!"});
-    } else if (password === undefined || password === "") {
-      return res.json({message: "enter password at least 6 character!"});
-    }
 
     const usernameExist = await userModel.getExistingUsername(username);
     const emailExist = await userModel.getExistingEmail(email);
@@ -26,9 +19,6 @@ class UserController {
 
   loginExistUser = async (req, res) => {
     const {email, password} = req.body;
-    if (email === undefined || email === "" || password === undefined || password === "") {
-      res.json({message: "enter the data correctly!"});
-    }
 
     try {
       const userExist = await userModel.getExistingUser(email, password);
@@ -41,7 +31,6 @@ class UserController {
           res.json({message: `password is incorrect!`});
         }
       } else {
-        console.log(userExist);
         //generate jwt
         const token = jwt.sign(userExist, "shhh123", {expiresIn: "1h"});
 

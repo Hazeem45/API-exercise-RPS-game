@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const authentication = (req, res, next) => {
+const authorization = (req, res, next) => {
   const {authorization} = req.headers;
 
   try {
@@ -7,7 +7,7 @@ const authentication = (req, res, next) => {
       return res.json({message: "unauthorized"});
     } else {
       const token = jwt.verify(authorization, "shhh123");
-      console.log(token);
+      req.token = token;
     }
     next();
   } catch (error) {
@@ -15,4 +15,4 @@ const authentication = (req, res, next) => {
   }
 };
 
-module.exports = authentication;
+module.exports = authorization;

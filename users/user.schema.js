@@ -41,7 +41,39 @@ const loginSchema = {
   },
 };
 
+const createRoom = {
+  roomName: {
+    notEmpty: true,
+    errorMessage: "room name cannot empty",
+    isLength: {
+      options: {min: 5, max: 12},
+      errorMessage: "room name shoulbe at least 5 chars and max 12 chars",
+    },
+  },
+  player1Choice: {
+    notEmpty: true,
+    errorMessage: "your choice cannot be empty",
+    isIn: {
+      options: [["rock", "paper", "scissor"]],
+      errorMessage: "your choice must be rock/paper/scissor",
+    },
+  },
+};
+
+const updateRoom = {
+  player2Choice: {
+    notEmpty: true,
+    errorMessage: "your choice cannot be empty",
+    isIn: {
+      options: [["rock", "paper", "scissor"]],
+      errorMessage: "your choice must be rock/paper/scissor",
+    },
+  },
+};
+
 module.exports = {
   registrationSchema,
   loginSchema,
+  createRoom,
+  updateRoom,
 };

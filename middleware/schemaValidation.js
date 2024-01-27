@@ -4,6 +4,7 @@ const schemaValidation = (req, res, next) => {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {
+    res.statusCode = 400;
     return res.send(result.errors);
   } else {
     next();
